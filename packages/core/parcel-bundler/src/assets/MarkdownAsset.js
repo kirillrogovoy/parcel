@@ -9,7 +9,18 @@ class MarkdownAsset extends Asset {
   }
   async generate() {
     let marked = await localRequire('marked', this.name);
-    return marked(this.contents);
+    const contents = marked(this.contents);
+
+    return [
+      {
+        type: 'html',
+        value: contents
+      },
+      {
+        type: 'js',
+        value: `module.exports=${JSON.stringify(contents)}`
+      }
+    ];
   }
 }
 module.exports = MarkdownAsset;
